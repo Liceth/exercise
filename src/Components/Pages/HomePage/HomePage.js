@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../../../Assets/Styles/App.css';
+import '../../../Assets/Styles/HomePage.css';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -7,6 +7,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+
+const file = require('../../../Text/list.txt');
 
 const CustomTableCell = withStyles(theme => ({
   head: {
@@ -34,12 +36,20 @@ const styles = theme => ({
   },
 });
 
+function handleClick() { 
+  fetch(file)
+  .then(response => response.text())
+  .then(text => console.log(text))
+  
+} 
+ 
 class HomePage extends Component {
   render() {
     return (
       <div className="App">
         <header className="App-header">
         <p>Exercise</p>
+        <div onClick={handleClick}>click me!</div>
         </header>
         <div className="App-body">
           <h3>Departamento</h3>

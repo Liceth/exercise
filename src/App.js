@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import HomePage from "./Components/Pages/HomePage";
-//const file = require("./Texts/list.txt");
 
 const App = () => (
   <Router>
