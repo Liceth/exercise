@@ -36,20 +36,26 @@ const styles = theme => ({
   },
 });
 
-function handleClick() { 
+function handleList() { 
   fetch(file)
   .then(response => response.text())
-  .then(text => console.log(text))
-  
+  .then(text => { 
+    var ListArray =  text.split("\n");
+    console.log(ListArray);
+  })
+    
 } 
  
 class HomePage extends Component {
+  
+  componentDidMount(){
+    handleList();
+  }
   render() {
     return (
       <div className="App">
         <header className="App-header">
-        <p>Exercise</p>
-        <div onClick={handleClick}>click me!</div>
+        <p></p>
         </header>
         <div className="App-body">
           <h3>Departamento</h3>
@@ -65,20 +71,16 @@ class HomePage extends Component {
                 </TableHead>
                 <TableBody>
                   <TableRow className={styles.row} >
-                    <CustomTableCell component="th" scope="row">
-                      Lima
-                    </CustomTableCell>
+                    <CustomTableCell component="th" scope="row">Lima</CustomTableCell>
                     <CustomTableCell align="center">123123</CustomTableCell>
-                    <CustomTableCell align="center">131313</CustomTableCell>
-                    <CustomTableCell align="center">13132</CustomTableCell>
+                    <CustomTableCell align="center"> -- </CustomTableCell>
+                    <CustomTableCell align="center"> -- </CustomTableCell>
                   </TableRow>
                   <TableRow className={styles.row} >
-                    <CustomTableCell component="th" scope="row">
-                      Lima
-                    </CustomTableCell>
+                    <CustomTableCell component="th" scope="row">Lima</CustomTableCell>
                     <CustomTableCell align="center">123123</CustomTableCell>
-                    <CustomTableCell align="center">131313</CustomTableCell>
-                    <CustomTableCell align="center">13132</CustomTableCell>
+                    <CustomTableCell align="center"> -- </CustomTableCell>
+                    <CustomTableCell align="center"> -- </CustomTableCell>
                   </TableRow>
                 </TableBody>
               </Table>
