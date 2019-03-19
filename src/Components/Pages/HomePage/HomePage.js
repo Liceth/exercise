@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import '../../../Assets/Styles/HomePage.css';
+import '../../../assets/styles/HomePage.css';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 
-const file = require('../../../Text/list.txt');
+const file = require('../../../assets/text/list.txt');
 
 const CustomTableCell = withStyles(theme => ({
   head: {
@@ -27,7 +26,7 @@ const styles = theme => ({
     overflowX: 'auto',
   },
   table: {
-    minWidth: 700,
+  //  minWidth: 700,
   },
   row: {
     '&:nth-of-type(odd)': {
@@ -36,30 +35,49 @@ const styles = theme => ({
   },
 });
 
-function handleList() { 
-  fetch(file)
-  .then(response => response.text())
-  .then(text => { 
-    var ListArray =  text.split("\n");
-    console.log(ListArray);
-  })
-    
-} 
- 
 class HomePage extends Component {
-  
+  constructor(props){
+    super(props);
+    this.state = { 
+      dataList:[],
+      departamentsList:[],
+    }
+  }
+
+  handleList() { 
+    fetch(file)
+    .then(response => response.text())
+    .then(text => {
+      this.setState({
+        dataList: text.replace(/[“”]+/g,'').split("\n")
+      })
+     
+    })
+  }
+
+  getDepartments(){
+    // let departaments = dataList.map(function (dataList) {
+    //   return dataList.split('/')[0]
+    // });
+    // let listing = departaments.filter(function(elem, index, self) {
+    //   return index === self.indexOf(elem)
+    // }); 
+    // this.setState({departamentsList });
+  }
+
   componentDidMount(){
-    handleList();
+    this.handleList();
+    
   }
   render() {
+    let  dataList = this.state.dataList;
+    console.log(dataList)
     return (
       <div className="App">
         <header className="App-header">
-        <p></p>
         </header>
         <div className="App-body">
           <h3>Departamento</h3>
-            <Paper className={styles.root}>
               <Table className={styles.table}>
                 <TableHead>
                   <TableRow>
@@ -69,24 +87,22 @@ class HomePage extends Component {
                     <CustomTableCell align="center">Descripcion Padre</CustomTableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
-                  <TableRow className={styles.row} >
-                    <CustomTableCell component="th" scope="row">Lima</CustomTableCell>
-                    <CustomTableCell align="center">123123</CustomTableCell>
-                    <CustomTableCell align="center"> -- </CustomTableCell>
-                    <CustomTableCell align="center"> -- </CustomTableCell>
-                  </TableRow>
-                  <TableRow className={styles.row} >
-                    <CustomTableCell component="th" scope="row">Lima</CustomTableCell>
-                    <CustomTableCell align="center">123123</CustomTableCell>
-                    <CustomTableCell align="center"> -- </CustomTableCell>
-                    <CustomTableCell align="center"> -- </CustomTableCell>
-                  </TableRow>
-                </TableBody>
+                {/* <TableBody>
+                  { departamentsList.map( department =>{
+                    return(
+                      <TableRow className={styles.row}>
+                        <CustomTableCell component="th" scope="row">{department[0]}</CustomTableCell>
+                        <CustomTableCell component="th" scope="row">{department[1]}</CustomTableCell>
+                        <CustomTableCell component="th" scope="row">{department[2]}</CustomTableCell>
+                        <CustomTableCell component="th" scope="row">{department[3]}</CustomTableCell>
+                      </TableRow>
+                      )
+                    })
+                  }
+                </TableBody> */}
               </Table>
-            </Paper>
+              
           <h3>Provincia</h3>
-          <Paper className={styles.root}>
           <Table className={styles.table}>
             <TableHead>
               <TableRow>
@@ -97,29 +113,22 @@ class HomePage extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow className={styles.row} >
-                <CustomTableCell component="th" scope="row">
-                  Lima
-                </CustomTableCell>
-                <CustomTableCell align="center">123123</CustomTableCell>
-                <CustomTableCell align="center">131313</CustomTableCell>
-                <CustomTableCell align="center">13132</CustomTableCell>
- 
+            { dataList.map( elem =>{
+              return(
+                <TableRow className={styles.row}>
+                <CustomTableCell component="th" scope="row">{elem.split(' ')[3]}</CustomTableCell>
+                <CustomTableCell component="th" scope="row">{elem.split(' ')[4]}</CustomTableCell>
+                <CustomTableCell component="th" scope="row">{elem.split(' ')[0]}</CustomTableCell>
+                <CustomTableCell component="th" scope="row">{elem.split(' ')[1]}</CustomTableCell>
               </TableRow>
-              <TableRow className={styles.row} >
-                <CustomTableCell component="th" scope="row">
-                  Lima
-                </CustomTableCell>
-                <CustomTableCell align="center">123123</CustomTableCell>
-                <CustomTableCell align="center">131313</CustomTableCell>
-                <CustomTableCell align="center">13132</CustomTableCell>
-              </TableRow>
+              )
+              })
+            }
             </TableBody>
           </Table>
-        </Paper>
+
         <h3>Distrito</h3>
-          <Paper className={styles.root}>
-          <Table className={styles.table}>
+        <Table className={styles.table}>
             <TableHead>
               <TableRow>
                 <CustomTableCell>Codigo</CustomTableCell>
@@ -129,26 +138,20 @@ class HomePage extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow className={styles.row} >
-                <CustomTableCell component="th" scope="row">
-                  Lima
-                </CustomTableCell>
-                <CustomTableCell align="center">123123</CustomTableCell>
-                <CustomTableCell align="center">131313</CustomTableCell>
-                <CustomTableCell align="center">13132</CustomTableCell>
- 
+            { dataList.map( elem =>{
+              return(
+                <TableRow className={styles.row}>
+                <CustomTableCell component="th" scope="row">{elem.split(' ')[6]}</CustomTableCell>
+                <CustomTableCell component="th" scope="row">{elem.split(' ')[7]}</CustomTableCell>
+                <CustomTableCell component="th" scope="row">{elem.split(' ')[3]}</CustomTableCell>
+                <CustomTableCell component="th" scope="row">{elem.split(' ')[4]}</CustomTableCell>
               </TableRow>
-              <TableRow className={styles.row} >
-                <CustomTableCell component="th" scope="row">
-                  Lima
-                </CustomTableCell>
-                <CustomTableCell align="center">123123</CustomTableCell>
-                <CustomTableCell align="center">131313</CustomTableCell>
-                <CustomTableCell align="center">13132</CustomTableCell>
-              </TableRow>
+              )
+              })
+            }
             </TableBody>
           </Table>
-        </Paper>
+            
       </div>
     </div>
     );
