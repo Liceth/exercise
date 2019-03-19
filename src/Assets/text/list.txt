@@ -6,4 +6,4 @@
 “02 Arequipa /  / ”
 “02 Arequipa / 63 Arequipa / ”
 “02 Arequipa / 64 Caylloma / ”
-“02 Arequipa / 63 Arequipa / 267 Cercado”
+“02 Arequipa / 63 Arequipa / 267 Cercado .”
