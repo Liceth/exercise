@@ -96,9 +96,10 @@ class Home extends Component {
   }
 
   getDistrict(dataFile){
+    debugger;
     let departments = dataFile.map(function(x){
       let newList = x.split('/');
-      return [newList[0], newList[2]]
+      return [newList[1], newList[2]]
     });
     let emptySpaceList = departments.sort((a,b) => a-b).filter( function (elem, index, self) {
       return elem[1].trim() !== ''
