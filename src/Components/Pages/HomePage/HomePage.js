@@ -1,32 +1,36 @@
-import React, { Component } from 'react';
+import React , { Component } from 'react';
 import '../../../assets/styles/HomePage.css';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 
 const file = require('../../../assets/text/list.txt');
 
+
 const CustomTableCell = withStyles(theme => ({
   head: {
-    backgroundColor: '#282c34',
-    color: '#ffffff',
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
   },
   body: {
     fontSize: 14,
+    fontWeight:700
   },
 }))(TableCell);
 
 const styles = theme => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop:0,
     overflowX: 'auto',
   },
   table: {
-  //  minWidth: 700,
+    minWidth: 700,
   },
   row: {
     '&:nth-of-type(odd)': {
@@ -39,123 +43,161 @@ class HomePage extends Component {
   constructor(props){
     super(props);
     this.state = { 
-      dataList:[],
+      dataFile:[],
       departamentsList:[],
+      provinceList:[],
+      districtList:[]
     }
   }
 
-  handleList() { 
+  handleFile(){ 
     fetch(file)
     .then(response => response.text())
     .then(text => {
       this.setState({
-        dataList: text.replace(/[“”]+/g,'').split("\n")
+        dataFile: text.replace(/[“”]+/g,'').split("\n")
       })
-     
+      this.getDepartments(this.state.dataFile);
+      this.getProvince(this.state.dataFile);
+      this.getDistrict(this.state.dataFile);
     })
   }
 
-  getDepartments(){
-    // let departaments = dataList.map(function (dataList) {
-    //   return dataList.split('/')[0]
-    // });
-    // let listing = departaments.filter(function(elem, index, self) {
-    //   return index === self.indexOf(elem)
-    // }); 
-    // this.setState({departamentsList });
+  getDepartments (dataFile){
+    let departments = dataFile.map(function(x){
+      return x.split('/')[0]
+    });
+    let Listing = departments.filter(function(elem, index, self){
+      return index === self.indexOf(elem)
+    });
+    let departamentsList = Listing.map( departments =>
+      departments.trim().split(' ')
+    );
+    this.setState({departamentsList})
+  }
+
+  getProvince(dataFile){
+    let departments = dataFile.map(function(x){
+      let List = x.split('/');
+      return [List[0], List[1]]
+    });
+    let  emptySpaceList = departments.sort(((a,b) => a-b)).filter( function (elem, index, self) {
+        return elem[1].trim() !== ''
+      });
+    let newListing=[];
+      emptySpaceList.sort().map(function(value, index){
+      (!index || value[1] !== emptySpaceList[index - 1][1]) && newListing.push(value)
+      return newListing
+    })
+    let provinceList = newListing.map(elem =>
+      [elem[0].trim().split(' '), elem[1].trim().split(' '),]
+    )
+    this.setState({provinceList})
+  }
+
+  getDistrict(dataFile){
+    let departments = dataFile.map(function(x){
+      let newList = x.split('/');
+      return [newList[1], newList[2]]
+    });
+    let emptySpaceList = departments.sort((a,b) => a-b).filter( function (elem, index, self) {
+      return elem[1].trim() !== ''
+    });
+    let districtList = emptySpaceList.map(elem =>
+      [elem[0].trim().split(' '), elem[1].trim().split(' '), ]
+    )
+    this.setState({districtList})
   }
 
   componentDidMount(){
-    this.handleList();
-    
+    this.handleFile();
   }
-  render() {
-    let  dataList = this.state.dataList;
-    console.log(dataList)
-    return (
-      <div className="App">
-        <header className="App-header">
-        </header>
-        <div className="App-body">
-          <h3>Departamento</h3>
-              <Table className={styles.table}>
-                <TableHead>
-                  <TableRow>
-                    <CustomTableCell>Codigo</CustomTableCell>
-                    <CustomTableCell align="center">Nombre</CustomTableCell>
-                    <CustomTableCell align="center">Codigo Padre</CustomTableCell>
-                    <CustomTableCell align="center">Descripcion Padre</CustomTableCell>
-                  </TableRow>
-                </TableHead>
-                {/* <TableBody>
-                  { departamentsList.map( department =>{
-                    return(
-                      <TableRow className={styles.row}>
-                        <CustomTableCell component="th" scope="row">{department[0]}</CustomTableCell>
-                        <CustomTableCell component="th" scope="row">{department[1]}</CustomTableCell>
-                        <CustomTableCell component="th" scope="row">{department[2]}</CustomTableCell>
-                        <CustomTableCell component="th" scope="row">{department[3]}</CustomTableCell>
-                      </TableRow>
-                      )
-                    })
-                  }
-                </TableBody> */}
-              </Table>
-              
-          <h3>Provincia</h3>
-          <Table className={styles.table}>
-            <TableHead>
-              <TableRow>
-                <CustomTableCell>Codigo</CustomTableCell>
-                <CustomTableCell align="center">Nombre</CustomTableCell>
-                <CustomTableCell align="center">Codigo Padre</CustomTableCell>
-                <CustomTableCell align="center">Descripcion Padre</CustomTableCell>
+  render(){
+     const { classes } = this.props;
+     console.log(this.state)
+     return(
+      <Paper className={classes.root}>
+        <div><header className="App-header"> EJERCICIO</header></div>
+        <div><h3>DEPARTAMENTO</h3></div>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell>Código</CustomTableCell>
+              <CustomTableCell>Nombre</CustomTableCell>
+              <CustomTableCell>Código Padre</CustomTableCell>
+              <CustomTableCell>Descripción Padre</CustomTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {this.state.departamentsList.map((department,id) => (
+              <TableRow className={classes.row} key={id}>
+                <CustomTableCell component="th" scope="row">
+                  {department[0] || '-'}
+                </CustomTableCell>
+                <CustomTableCell>{department[1] || ' '}</CustomTableCell>
+                <CustomTableCell>{department[2] || ' '}</CustomTableCell>
+                <CustomTableCell>{department[3] || ' '}</CustomTableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-            { dataList.map( elem =>{
-              return(
-                <TableRow className={styles.row}>
-                <CustomTableCell component="th" scope="row">{elem.split(' ')[3]}</CustomTableCell>
-                <CustomTableCell component="th" scope="row">{elem.split(' ')[4]}</CustomTableCell>
-                <CustomTableCell component="th" scope="row">{elem.split(' ')[0]}</CustomTableCell>
-                <CustomTableCell component="th" scope="row">{elem.split(' ')[1]}</CustomTableCell>
-              </TableRow>
-              )
-              })
-            }
-            </TableBody>
-          </Table>
-
-        <h3>Distrito</h3>
-        <Table className={styles.table}>
-            <TableHead>
-              <TableRow>
-                <CustomTableCell>Codigo</CustomTableCell>
-                <CustomTableCell align="center">Nombre</CustomTableCell>
-                <CustomTableCell align="center">Codigo Padre</CustomTableCell>
-                <CustomTableCell align="center">Descripcion Padre</CustomTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-            { dataList.map( elem =>{
-              return(
-                <TableRow className={styles.row}>
-                <CustomTableCell component="th" scope="row">{elem.split(' ')[6]}</CustomTableCell>
-                <CustomTableCell component="th" scope="row">{elem.split(' ')[7]}</CustomTableCell>
-                <CustomTableCell component="th" scope="row">{elem.split(' ')[3]}</CustomTableCell>
-                <CustomTableCell component="th" scope="row">{elem.split(' ')[4]}</CustomTableCell>
-              </TableRow>
-              )
-              })
-            }
-            </TableBody>
-          </Table>
-            
-      </div>
-    </div>
-    );
-  }
+            ))}
+          </TableBody>
+       </Table>
+ 
+       <h3>PROVINCIA</h3>
+       <Table className={classes.table}>
+         <TableHead>
+           <TableRow>
+             <CustomTableCell>Código</CustomTableCell>
+             <CustomTableCell>Nombre</CustomTableCell>
+             <CustomTableCell>Código Padre</CustomTableCell>
+             <CustomTableCell>Descripción Padre</CustomTableCell>
+           </TableRow>
+         </TableHead>
+         <TableBody>
+           {this.state.provinceList.map((province, id) => (
+             <TableRow className={classes.row} key={id}>
+               <CustomTableCell component="th" scope="row">
+               {province[1][0] || '-'}
+               </CustomTableCell>
+               <CustomTableCell>{province[1][1] || ' '}</CustomTableCell>
+               <CustomTableCell>{province[0][0] || ' '}</CustomTableCell>
+               <CustomTableCell>{province[0][1] || ' '}</CustomTableCell>
+             </TableRow>
+           ))}
+         </TableBody>
+       </Table>
+ 
+       <h3>DISTRITO</h3>
+       <Table className={classes.table}>
+         <TableHead>
+           <TableRow>
+             <CustomTableCell>Código</CustomTableCell>
+             <CustomTableCell>Nombre</CustomTableCell>
+             <CustomTableCell>Código Padre</CustomTableCell>
+             <CustomTableCell>Descripción Padre</CustomTableCell>
+           </TableRow>
+         </TableHead>
+         <TableBody>
+           {this.state.districtList.map((district, id) => (
+             <TableRow className={classes.row} key={id}>
+               <CustomTableCell component="th" scope="row">
+               {district[1][0]||'-'}
+               </CustomTableCell>
+               <CustomTableCell>
+               {`${district[1][1]} ${district[1][2]}`||'-'}
+               </CustomTableCell>
+               <CustomTableCell>{district[0][0]||'-'}</CustomTableCell>
+               <CustomTableCell>{district[0][1]||'-'}</CustomTableCell>
+             </TableRow>
+           ))}
+         </TableBody>
+       </Table>
+     </Paper>
+     )
+    }
 }
 
-export default HomePage;
+HomePage.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(HomePage);
