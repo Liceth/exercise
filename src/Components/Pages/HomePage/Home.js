@@ -96,7 +96,6 @@ class Home extends Component {
   }
 
   getDistrict(dataFile){
-    debugger;
     let departments = dataFile.map(function(x){
       let newList = x.split('/');
       return [newList[1], newList[2]]
